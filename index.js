@@ -2,6 +2,7 @@
 
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
+const cors = require('cors');
 const {
   GraphQLSchema,
   GraphQLObjectType,
@@ -12,6 +13,8 @@ const {
 } = require("graphql");
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
 /* ======================= DEMO DATA ================= */
 const authors = [
@@ -81,11 +84,12 @@ const RootQueryType = new GraphQLObjectType({
     },
     author: {
       type: AuthorType,
-        description: "A single author",
-        args: {
-        id: { type: GraphQLInt}  
+      description: "A single author",
+      args: {
+        id: { type: GraphQLInt },
       },
-      resolve: (parent, args) => authors.find((author) => author.id === args.id) ,
+      resolve: (parent, args) =>
+        authors.find((author) => author.id === args.id),
     },
     authors: {
       type: new GraphQLList(AuthorType),
